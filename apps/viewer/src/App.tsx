@@ -5,6 +5,8 @@ import { Hud } from "./components/Hud";
 import { usePmtilesProtocol } from "./hooks/usePmtilesProtocol";
 import { useTreeMap } from "./hooks/useTreeMap";
 import { useTreeMetadata } from "./hooks/useTreeMetadata";
+import { TreeDetailBottomSheet } from "./components/TreeDetailBottomSheet";
+import { useNarrowViewport } from "./hooks/useNarrowViewport";
 import { useTreeSelectionPopup } from "./hooks/useTreeSelectionPopup";
 import type { TreeSelection } from "./types";
 
@@ -35,7 +37,8 @@ export default function App() {
     mapTheme: "dark"
   });
 
-  useTreeSelectionPopup(mapRef, selection, handlePopupClose);
+  const isNarrow = useNarrowViewport();
+  useTreeSelectionPopup(mapRef, selection, handlePopupClose, !isNarrow);
 
   const toggleSpecies = (value: string) => {
     setSelectedSpecies((prev) =>
@@ -56,6 +59,13 @@ export default function App() {
         onSpeciesPanelOpenChange={setSpeciesPanelOpen}
       />
       <main ref={mapContainerRef} className="map" />
+      {isNarrow && selection ? (
+        <TreeDetailBottomSheet
+          open
+          onClose={handlePopupClose}
+          properties={selection.properties}
+        />
+      ) : null}
     </div>
   );
 }

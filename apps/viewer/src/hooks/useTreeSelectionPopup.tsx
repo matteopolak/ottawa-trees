@@ -7,7 +7,8 @@ import type { TreeSelection } from "../types";
 export function useTreeSelectionPopup(
   mapRef: RefObject<MapLibreMap | null>,
   selection: TreeSelection | null,
-  onClose: () => void
+  onClose: () => void,
+  enabled: boolean
 ) {
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
@@ -16,7 +17,7 @@ export function useTreeSelectionPopup(
     const map = mapRef.current;
     if (!map) return;
 
-    if (!selection) {
+    if (!selection || !enabled) {
       return;
     }
 
@@ -29,7 +30,7 @@ export function useTreeSelectionPopup(
     const popup = new maplibregl.Popup({
       closeButton: true,
       closeOnClick: false,
-      maxWidth: "min(92vw, 18rem)",
+      maxWidth: "min(94vw, 28rem)",
       className: "tree-popup"
     })
       .setLngLat(selection.lngLat)
@@ -44,5 +45,5 @@ export function useTreeSelectionPopup(
       root.unmount();
       popup.remove();
     };
-  }, [mapRef, selection]);
+  }, [mapRef, selection, enabled]);
 }

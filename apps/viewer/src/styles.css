@@ -1,5 +1,6 @@
 :root {
   --z-hud: 10;
+  --z-tree-sheet: 25;
   --z-species-panel: 30;
 }
 
@@ -197,6 +198,93 @@ body,
   accent-color: var(--color-accent);
 }
 
+/* Tree detail bottom sheet (narrow viewports) */
+.tree-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-tree-sheet) - 1);
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: default;
+  animation: tree-sheet-backdrop-in 0.2s ease-out forwards;
+}
+
+.tree-sheet {
+  position: fixed;
+  z-index: var(--z-tree-sheet);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: min(60vh, 100% - env(safe-area-inset-top, 0px));
+  overflow: auto;
+  padding: 2.35rem 0.85rem max(0.85rem, env(safe-area-inset-bottom));
+  border-radius: 16px 16px 0 0;
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+  background: var(--color-bg-panel);
+  color: var(--color-text);
+  box-shadow: var(--shadow-lg);
+  animation: tree-sheet-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.tree-sheet__close {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.35rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.tree-sheet__close:hover {
+  color: var(--color-text);
+  background: rgba(124, 184, 147, 0.12);
+}
+
+@keyframes tree-sheet-in {
+  from {
+    opacity: 0.92;
+    transform: translateY(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tree-sheet-backdrop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tree-sheet {
+    animation: none;
+  }
+
+  .tree-sheet-backdrop {
+    animation: none;
+  }
+}
+
 /* Tree popup (React content inside MapLibre popup) */
 .tree-popup .maplibregl-popup-content {
   padding: 0;
@@ -212,25 +300,53 @@ body,
   border-top-color: var(--color-bg-panel);
 }
 
+/* Animate content only — MapLibre positions the outer .maplibregl-popup with transform */
+.tree-popup .maplibregl-popup-content {
+  animation: tree-popup-content-in 0.22s ease-out forwards;
+}
+
+@keyframes tree-popup-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tree-popup .maplibregl-popup-content {
+    animation: none;
+  }
+}
+
 .tree-popup-inner {
   padding: 0;
 }
 
 .tree-card {
-  padding: 0.75rem 0.85rem;
+  padding: 0.9rem 1rem 1rem;
+  min-width: min(100%, 16rem);
 }
 
 .tree-card__title {
-  margin: 0 0 0.5rem;
-  font-size: 1rem;
+  margin: 0 0 0.65rem;
+  font-size: 1.08rem;
   font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
 }
 
 .tree-card__dl {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.35rem;
+  grid-template-columns: minmax(6.75rem, 38%) minmax(0, 1fr);
+  column-gap: 1rem;
+  row-gap: 0.65rem;
   margin: 0;
+  align-items: baseline;
 }
 
 .tree-card__dl dt {
@@ -242,7 +358,17 @@ body,
 
 .tree-card__dl dd {
   margin: 0;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  min-width: 0;
+  word-wrap: break-word;
+}
+
+@media (max-width: 360px) {
+  .tree-card__dl {
+    grid-template-columns: minmax(5.5rem, 42%) minmax(0, 1fr);
+    column-gap: 0.65rem;
+  }
 }
 
 [data-theme="dark"] .maplibregl-ctrl button {
@@ -261,9 +387,14 @@ body,
 }
 
 [data-theme="dark"] .maplibregl-popup-close-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
   color: var(--color-muted);
   font-size: 1.25rem;
-  padding: 0.25rem 0.45rem;
+  padding: 0.25rem;
 }
 
 [data-theme="dark"] .maplibregl-popup-close-button:hover {
