@@ -1,0 +1,15 @@
+{
+  "name": "@trees/geojson-builder",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:data": "tsx src/buildData.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@trees/shared": "workspace:*",
+    "stream-json": "^2.0.0"
+  }
+}

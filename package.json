@@ -1,0 +1,23 @@
+{
+  "name": "ottawa-tree-viewer",
+  "private": true,
+  "packageManager": "pnpm@10",
+  "scripts": {
+    "build:data": "pnpm --filter @trees/geojson-builder build:data",
+    "build:viewer": "pnpm --filter @trees/viewer build",
+    "build": "pnpm run build:data && pnpm run build:viewer",
+    "dev": "pnpm --filter @trees/viewer dev",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.3",
+    "vitest": "^4.1.2"
+  }
+}

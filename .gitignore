@@ -1,0 +1,10 @@
+node_modules
+dist
+.DS_Store
+.pnpm-store
+
+# User-provided raw data; not committed
+data/raw/*.geojson
+
+# Optional local scratch data
+data/tmp/

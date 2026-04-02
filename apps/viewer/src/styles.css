@@ -1,0 +1,92 @@
+:root {
+  color: #1f2a23;
+  font-family: "ui-sans-serif", "system-ui", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  height: 100%;
+}
+
+.panel {
+  overflow: auto;
+  background: #f8faf7;
+  border-right: 1px solid #dbe5d6;
+  padding: 1rem;
+}
+
+.panel h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.panel h2 {
+  margin: 1rem 0 0.5rem;
+  font-size: 1rem;
+}
+
+.panel p {
+  color: #4f6253;
+}
+
+.species-list {
+  max-height: 280px;
+  overflow: auto;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.species-list label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.meta {
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  color: #526857;
+}
+
+.map {
+  height: 100%;
+}
+
+.tree-card {
+  margin-top: 1rem;
+  border: 1px solid #d9e5d6;
+  background: #fff;
+  border-radius: 12px;
+  padding: 0.75rem;
+}
+
+.tree-card dl {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.tree-card dt {
+  color: #6a7e6d;
+  font-size: 0.75rem;
+}
+
+.tree-card dd {
+  margin: 0;
+  font-size: 0.9rem;
+}
