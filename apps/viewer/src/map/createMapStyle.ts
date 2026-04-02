@@ -66,7 +66,9 @@ export function createMapStyle(pmtilesUrl: string, theme: MapVisualTheme): Style
       } satisfies RasterSourceSpecification,
       [sourceId]: {
         type: "vector",
-        url: `pmtiles://${pmtilesUrl}`
+        url: `pmtiles://${pmtilesUrl}`,
+        attribution:
+          'Contains information licensed under the <a href="https://ottawa.ca/en/city-hall/open-transparent-and-accountable-government/open-data/open-data-licence-version-20">Open Government Licence – City of Ottawa</a>. Tree data: <a href="https://open.ottawa.ca/datasets/tree-inventory/explore">City of Ottawa Tree Inventory</a>.'
       } satisfies VectorSourceSpecification
     },
     layers: [

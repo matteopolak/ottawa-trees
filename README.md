@@ -12,6 +12,12 @@ Static map viewer for Ottawa trees using PMTiles + MapLibre.
 
 Raw GeoJSON is user-supplied and not committed.
 
+### Data source
+
+Download the City of Ottawa **Tree Inventory** from [open.ottawa.ca](https://open.ottawa.ca/datasets/tree-inventory/explore) and use it as described below.
+
+**Licence:** Contains information licensed under the [Open Government Licence – City of Ottawa](https://ottawa.ca/en/city-hall/open-transparent-and-accountable-government/open-data/open-data-licence-version-20).
+
 1. Download the tree GeoJSON and place it at `data/raw/trees.geojson` (or pass a custom path).
 2. Build data:
 
