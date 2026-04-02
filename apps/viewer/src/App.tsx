@@ -73,6 +73,10 @@ export default function App() {
     );
   };
 
+  const handleClearSpeciesSelection = useCallback(() => {
+    setSelectedSpecies([]);
+  }, []);
+
   return (
     <div className="app-shell">
       <Hud
@@ -84,6 +88,7 @@ export default function App() {
         onToggleSpecies={toggleSpecies}
         speciesPanelOpen={speciesPanelOpen}
         onSpeciesPanelOpenChange={setSpeciesPanelOpen}
+        onClearSpeciesSelection={handleClearSpeciesSelection}
         onLocateUser={handleLocateUser}
       />
       <main ref={mapContainerRef} className="map" />

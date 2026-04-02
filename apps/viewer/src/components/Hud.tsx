@@ -1,5 +1,6 @@
 import { toIsoDate } from "@trees/shared";
 import type { DateRange } from "../types";
+import { useNarrowViewport } from "../hooks/useNarrowViewport";
 import { SpeciesFilterPanel } from "./SpeciesFilterPanel";
 
 interface HudProps {
@@ -11,6 +12,7 @@ interface HudProps {
   onToggleSpecies: (value: string) => void;
   speciesPanelOpen: boolean;
   onSpeciesPanelOpenChange: (open: boolean) => void;
+  onClearSpeciesSelection: () => void;
   onLocateUser: () => void;
 }
 
@@ -23,9 +25,12 @@ export function Hud({
   onToggleSpecies,
   speciesPanelOpen,
   onSpeciesPanelOpenChange,
+  onClearSpeciesSelection,
   onLocateUser
 }: HudProps) {
   const selectedCount = selectedSpecies.length;
+  const isNarrow = useNarrowViewport();
+  const speciesLayout = isNarrow ? "sheet" : "popover";
 
   return (
     <div className="hud">
@@ -57,20 +62,32 @@ export function Hud({
             </div>
           </div>
 
-          <div className="hud-actions">
-            <button
-              type="button"
-              className="hud-button"
-              onClick={() => onSpeciesPanelOpenChange(true)}
-              aria-expanded={speciesPanelOpen}
-            >
-              Species
-              {selectedCount > 0 ? (
-                <span className="hud-button__badge" aria-hidden>
-                  {selectedCount}
-                </span>
-              ) : null}
-            </button>
+          <div className="hud-species-anchor">
+            <div className="hud-actions">
+              <button
+                type="button"
+                className="hud-button"
+                onClick={() => onSpeciesPanelOpenChange(true)}
+                aria-expanded={speciesPanelOpen}
+              >
+                Species
+                {selectedCount > 0 ? (
+                  <span className="hud-button__badge" aria-hidden>
+                    {selectedCount}
+                  </span>
+                ) : null}
+              </button>
+            </div>
+
+            <SpeciesFilterPanel
+              open={speciesPanelOpen}
+              onClose={() => onSpeciesPanelOpenChange(false)}
+              species={species}
+              selectedSpecies={selectedSpecies}
+              onToggle={onToggleSpecies}
+              onClearSelection={onClearSpeciesSelection}
+              layout={speciesLayout}
+            />
           </div>
         </div>
 
@@ -88,14 +105,6 @@ export function Hud({
           </svg>
         </button>
       </div>
-
-      <SpeciesFilterPanel
-        open={speciesPanelOpen}
-        onClose={() => onSpeciesPanelOpenChange(false)}
-        species={species}
-        selectedSpecies={selectedSpecies}
-        onToggle={onToggleSpecies}
-      />
     </div>
   );
 }

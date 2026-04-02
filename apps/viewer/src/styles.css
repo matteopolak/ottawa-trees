@@ -60,8 +60,11 @@ body,
 .hud-actions,
 .hud-button,
 .hud-locate,
+.hud-species-anchor,
 .species-panel,
-.species-panel-backdrop {
+.species-panel-backdrop,
+.species-sheet,
+.species-sheet-backdrop {
   pointer-events: auto;
 }
 
@@ -180,6 +183,12 @@ body,
   accent-color: var(--color-accent);
 }
 
+.hud-species-anchor {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
 .hud-actions {
   display: flex;
   gap: 0.5rem;
@@ -227,31 +236,84 @@ body,
   cursor: default;
 }
 
-.species-panel {
-  position: fixed;
+.species-panel--popover {
+  position: absolute;
   z-index: var(--z-species-panel);
-  top: 0;
+  top: calc(100% + 0.5rem);
+  left: 0;
   right: 0;
-  bottom: 0;
-  width: min(22rem, 92vw);
-  overflow: auto;
-  padding: 1rem 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  max-height: min(70vh, 520px);
+  padding: 0.85rem;
+  border-radius: 14px;
+  border: 1px solid var(--color-border);
   background: var(--color-bg-panel);
-  border-left: 1px solid var(--color-border);
   box-shadow: var(--shadow-lg);
 }
 
+.species-panel__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
 .species-panel__title {
-  margin: 0 0 0.75rem;
+  margin: 0;
   font-size: 1rem;
   font-weight: 650;
 }
 
+.species-panel__clear {
+  padding: 0.2rem 0.45rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-accent);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.species-panel__clear:hover {
+  background: rgba(124, 184, 147, 0.15);
+}
+
+.species-panel__search {
+  width: 100%;
+  margin-bottom: 0.55rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: rgba(14, 18, 16, 0.65);
+  color: var(--color-text);
+  font-size: 0.88rem;
+}
+
+.species-panel__search::placeholder {
+  color: var(--color-muted);
+}
+
+.species-panel__search:focus {
+  outline: 2px solid rgba(124, 184, 147, 0.45);
+  outline-offset: 1px;
+}
+
 .species-list {
-  max-height: min(60vh, 480px);
+  flex: 1;
+  min-height: 0;
   overflow: auto;
   display: grid;
   gap: 0.35rem;
+}
+
+.species-list__empty {
+  margin: 0.35rem 0 0;
+  font-size: 0.88rem;
+  color: var(--color-muted);
 }
 
 .species-list label {
@@ -265,6 +327,86 @@ body,
 
 .species-list input {
   accent-color: var(--color-accent);
+}
+
+.species-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-species-panel) - 1);
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: default;
+  animation: tree-sheet-backdrop-in 0.2s ease-out forwards;
+}
+
+.species-sheet {
+  position: fixed;
+  z-index: var(--z-species-panel);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: min(72vh, 100% - env(safe-area-inset-top, 0px));
+  overflow: hidden;
+  padding: 2.35rem 0.85rem max(0.85rem, env(safe-area-inset-bottom));
+  border-radius: 16px 16px 0 0;
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+  background: var(--color-bg-panel);
+  color: var(--color-text);
+  box-shadow: var(--shadow-lg);
+  animation: tree-sheet-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.species-sheet .species-panel__header {
+  flex-shrink: 0;
+  padding-right: 2.25rem;
+}
+
+.species-sheet .species-panel__search {
+  flex-shrink: 0;
+}
+
+.species-sheet .species-list {
+  flex: 1;
+  min-height: 0;
+}
+
+.species-sheet__close {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.35rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.species-sheet__close:hover {
+  color: var(--color-text);
+  background: rgba(124, 184, 147, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .species-sheet {
+    animation: none;
+  }
+
+  .species-sheet-backdrop {
+    animation: none;
+  }
 }
 
 /* Tree detail bottom sheet (narrow viewports) */
