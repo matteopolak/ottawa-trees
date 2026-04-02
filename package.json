@@ -1,7 +1,7 @@
 {
   "name": "ottawa-tree-viewer",
   "private": true,
-  "packageManager": "pnpm@10",
+  "packageManager": "pnpm@10.32.1",
   "scripts": {
     "build:data": "pnpm --filter @trees/geojson-builder build:data",
     "build:viewer": "pnpm --filter @trees/viewer build",
