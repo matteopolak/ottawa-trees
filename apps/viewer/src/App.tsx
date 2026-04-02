@@ -37,6 +37,33 @@ export default function App() {
     mapTheme: "dark"
   });
 
+  const handleLocateUser = useCallback(() => {
+    if (!navigator.geolocation) {
+      window.alert("Location is not supported in this browser.");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const map = mapRef.current;
+        if (!map) return;
+        const center: [number, number] = [pos.coords.longitude, pos.coords.latitude];
+        const opts = { center, zoom: 15 };
+        const prefersReduced =
+          typeof window.matchMedia === "function" &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (prefersReduced) {
+          map.jumpTo(opts);
+        } else {
+          map.flyTo({ ...opts, essential: true });
+        }
+      },
+      () => {
+        window.alert("Could not get your location. Check permissions and try again.");
+      },
+      { enableHighAccuracy: true, timeout: 12_000, maximumAge: 60_000 }
+    );
+  }, [mapRef]);
+
   const isNarrow = useNarrowViewport();
   useTreeSelectionPopup(mapRef, selection, handlePopupClose, !isNarrow);
 
@@ -57,6 +84,7 @@ export default function App() {
         onToggleSpecies={toggleSpecies}
         speciesPanelOpen={speciesPanelOpen}
         onSpeciesPanelOpenChange={setSpeciesPanelOpen}
+        onLocateUser={handleLocateUser}
       />
       <main ref={mapContainerRef} className="map" />
       {isNarrow && selection ? (
