@@ -7,6 +7,15 @@ import { createMapStyle } from "../map/createMapStyle";
 import type { TreeFeatureProperties, TreeSelection } from "../types";
 import type { MutableRefObject } from "react";
 
+function resolvePmtilesUrl(): string {
+  const raw = import.meta.env.VITE_PMTILES_URL;
+  const trimmed = typeof raw === "string" ? raw.trim() : "";
+  if (trimmed) {
+    return trimmed;
+  }
+  return `${window.location.origin}/trees.pmtiles`;
+}
+
 interface UseTreeMapOptions {
   filterExpression: MapFilterExpression;
   onSelectionChange: (selection: TreeSelection | null) => void;
@@ -32,7 +41,7 @@ export function useTreeMap(
       return;
     }
 
-    const pmtilesUrl = `${window.location.origin}/trees.pmtiles`;
+    const pmtilesUrl = resolvePmtilesUrl();
     const pmtiles = new PMTiles(pmtilesUrl);
     protocolRef.current?.add(pmtiles);
 
