@@ -1,11 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import maplibregl, { type Map as MapLibreMap, type VectorSourceSpecification } from "maplibre-gl";
+import maplibregl, {
+  type Map as MapLibreMap,
+  type RasterSourceSpecification,
+  type VectorSourceSpecification
+} from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { PMTiles, Protocol } from "pmtiles";
 import { buildMapFilter, toIsoDate } from "@trees/shared";
 
 interface TreeFeatureProperties {
   SPECIES?: string | null;
+  SPECIES_CAT?: string | null;
+  TREE_COLOR?: string | null;
   DBH?: number | null;
   ADDNUM?: string | null;
   ADDSTR?: string | null;
@@ -25,9 +31,17 @@ interface DateRange {
 }
 
 const sourceId = "trees";
+const osmSourceId = "osm";
+const osmLayerId = "osm-basemap";
 const baseLayerId = "trees-base";
 const activeLayerId = "trees-active";
 const protocolId = "pmtiles";
+
+const treeCircleColor: maplibregl.ExpressionSpecification = [
+  "coalesce",
+  ["get", "TREE_COLOR"],
+  "#8fa090"
+];
 
 function formatTreeDate(properties: TreeFeatureProperties): string {
   const ts = typeof properties.TREE_DATE_TS === "number" ? properties.TREE_DATE_TS : null;
@@ -84,6 +98,13 @@ export default function App() {
       style: {
         version: 8,
         sources: {
+          [osmSourceId]: {
+            type: "raster",
+            tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+            tileSize: 256,
+            attribution:
+              '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          } satisfies RasterSourceSpecification,
           [sourceId]: {
             type: "vector",
             url: `pmtiles://${pmtilesUrl}`
@@ -93,7 +114,18 @@ export default function App() {
           {
             id: "background",
             type: "background",
-            paint: { "background-color": "#f2f4f1" }
+            paint: { "background-color": "#ececea" }
+          },
+          {
+            id: osmLayerId,
+            type: "raster",
+            source: osmSourceId,
+            minzoom: 0,
+            maxzoom: 22,
+            paint: {
+              "raster-saturation": -1,
+              "raster-contrast": -0.2
+            }
           },
           {
             id: baseLayerId,
@@ -101,9 +133,9 @@ export default function App() {
             source: sourceId,
             "source-layer": "trees",
             paint: {
-              "circle-color": "#8fa090",
-              "circle-radius": ["interpolate", ["linear"], ["zoom"], 12, 1.8, 16, 4.2],
-              "circle-opacity": 0.35
+              "circle-color": treeCircleColor,
+              "circle-radius": ["interpolate", ["linear"], ["zoom"], 12, 2.2, 16, 5],
+              "circle-opacity": 0.55
             }
           },
           {
@@ -112,11 +144,12 @@ export default function App() {
             source: sourceId,
             "source-layer": "trees",
             paint: {
-              "circle-color": "#2c7a4b",
-              "circle-stroke-color": "#f4fff7",
-              "circle-stroke-width": 1,
-              "circle-radius": ["interpolate", ["linear"], ["zoom"], 12, 2.5, 16, 6],
-              "circle-opacity": 0.9
+              "circle-color": treeCircleColor,
+              "circle-stroke-color": "#1a1a1a",
+              "circle-stroke-opacity": 0.45,
+              "circle-stroke-width": 2,
+              "circle-radius": ["interpolate", ["linear"], ["zoom"], 12, 3.2, 16, 8],
+              "circle-opacity": 1
             }
           }
         ]
